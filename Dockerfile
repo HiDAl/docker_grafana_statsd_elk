@@ -1,9 +1,12 @@
 #
-# Based on
+# Based on:
+#   https://github.com/scullxbones/docker_grafana_statsd_elk
+# Who is Based on
 #	https://github.com/cazcade/docker-grafana-graphite
 #
+#
 FROM debian:wheezy
-MAINTAINER Brian Scully <scullduggery@gmail.com>
+MAINTAINER Pablo Alcantar <palcantar@lemontech.cl>
 
 RUN echo 'deb http://http.debian.net/debian wheezy-backports main' >> /etc/apt/sources.list.d/wheezy-backports.list
 # RUN echo 'deb http://us.archive.ubuntu.com/ubuntu/ trusty universe' >> /etc/apt/sources.list
@@ -43,13 +46,13 @@ RUN pip install --install-option="--prefix=/var/lib/graphite" --install-option="
 
 # Install Grafana
 RUN mkdir /src/grafana && cd /src/grafana &&\
- wget http://grafanarel.s3.amazonaws.com/grafana-1.8.1.tar.gz &&\
- tar xzvf grafana-1.8.1.tar.gz --strip-components=1 && rm grafana-1.8.1.tar.gz
+ wget http://grafanarel.s3.amazonaws.com/grafana-1.9.1.tar.gz &&\
+ tar xzvf grafana-1.9.1.tar.gz --strip-components=1 && rm grafana-1.9.1.tar.gz
 
 # Install Kibana
 RUN mkdir /src/kibana && cd /src/kibana &&\
- wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.2.tar.gz &&\
- tar xzvf kibana-3.1.2.tar.gz --strip-components=1 && rm kibana-3.1.2.tar.gz
+ wget https://download.elasticsearch.org/kibana/kibana/kibana-4.0.1-linux-x64.tar.gz &&\
+ tar xzvf kibana-4.0.1-linux-x64.tar.gz --strip-components=1 && rm kibana-4.0.1-linux-x64.tar.gz
 
 # Configure Elasticsearch
 ADD ./elasticsearch/run /usr/local/bin/run_elasticsearch
