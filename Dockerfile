@@ -12,10 +12,10 @@ RUN echo 'deb http://http.debian.net/debian wheezy-backports main' >> /etc/apt/s
 
 RUN apt-get -y update
 RUN apt-get -y install ca-certificates wget
-RUN wget -qO - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -
+# RUN wget -qO - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -
 
 # Logstash
-RUN echo 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main' >> /etc/apt/sources.list.d/logstash.list
+# RUN echo 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main' >> /etc/apt/sources.list.d/logstash.list
 RUN apt-get -y update &&\
     apt-get -y upgrade
 
@@ -26,17 +26,17 @@ RUN apt-get -y --no-install-recommends install supervisor nginx-light git wget c
 RUN apt-get -y --no-install-recommends install software-properties-common
 RUN apt-get -y --no-install-recommends -t wheezy-backports install nodejs
 # Elasticsearch
-RUN apt-get -y --no-install-recommends install openjdk-7-jre adduser
+# RUN apt-get -y --no-install-recommends install openjdk-7-jre adduser
 
 # Install Elasticsearch
-RUN groupadd -f -g 101 elasticsearch && useradd -u 1001 -g elasticsearch elasticsearch &&\
-    mkdir -p /home/elasticsearch && chown -R elasticsearch:elasticsearch /home/elasticsearch &&\
-    cd ~ && wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.0.deb &&\
-    dpkg -i elasticsearch-1.4.0.deb && rm elasticsearch-1.4.0.deb
+# RUN groupadd -f -g 101 elasticsearch && useradd -u 1001 -g elasticsearch elasticsearch &&\
+#     mkdir -p /home/elasticsearch && chown -R elasticsearch:elasticsearch /home/elasticsearch &&\
+#     cd ~ && wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.0.deb &&\
+#     dpkg -i elasticsearch-1.4.0.deb && rm elasticsearch-1.4.0.deb
 
 # Install Redis, Logstash
-RUN (wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -) && apt-get -y update
-RUN apt-get -y install --no-install-recommends redis-server logstash
+# RUN (wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -) && apt-get -y update
+# RUN apt-get -y install --no-install-recommends redis-server logstash
 
 # Install StatsD
 RUN mkdir /src && git clone https://github.com/etsy/statsd.git /src/statsd
@@ -54,21 +54,21 @@ RUN mkdir /src/grafana && cd /src/grafana &&\
  tar xzvf grafana-1.9.1.tar.gz --strip-components=1 && rm grafana-1.9.1.tar.gz
 
 # Install Kibana
-RUN mkdir /src/kibana && cd /src/kibana &&\
- wget https://download.elasticsearch.org/kibana/kibana/kibana-4.0.1-linux-x64.tar.gz &&\
- tar xzvf kibana-4.0.1-linux-x64.tar.gz --strip-components=1 && rm kibana-4.0.1-linux-x64.tar.gz
+# RUN mkdir /src/kibana && cd /src/kibana &&\
+#  wget https://download.elasticsearch.org/kibana/kibana/kibana-4.0.1-linux-x64.tar.gz &&\
+#  tar xzvf kibana-4.0.1-linux-x64.tar.gz --strip-components=1 && rm kibana-4.0.1-linux-x64.tar.gz
 
 # Configure Elasticsearch
-ADD ./elasticsearch/run /usr/local/bin/run_elasticsearch
-RUN chmod +x /usr/local/bin/run_elasticsearch &&\
-    mkdir -p /logs/elasticsearch && chown elasticsearch:elasticsearch /logs/elasticsearch &&\
-    mkdir -p /data/elasticsearch && chown elasticsearch:elasticsearch /data/elasticsearch &&\
-    mkdir -p /tmp/elasticsearch && chown elasticsearch:elasticsearch /tmp/elasticsearch
+# ADD ./elasticsearch/run /usr/local/bin/run_elasticsearch
+# RUN chmod +x /usr/local/bin/run_elasticsearch &&\
+#     mkdir -p /logs/elasticsearch && chown elasticsearch:elasticsearch /logs/elasticsearch &&\
+#     mkdir -p /data/elasticsearch && chown elasticsearch:elasticsearch /data/elasticsearch &&\
+#     mkdir -p /tmp/elasticsearch && chown elasticsearch:elasticsearch /tmp/elasticsearch
 
 # Configure Logstash
-ADD ./logstash/001-redis-input.conf /etc/logstash/conf.d/001-redis-input.conf
-ADD ./logstash/002-tcp-json-input.conf /etc/logstash/conf.d/002-tcp-json-input.conf
-ADD ./logstash/999-elasticsearch-output.conf /etc/logstash/conf.d/999-elasticsearch-output.conf
+# ADD ./logstash/001-redis-input.conf /etc/logstash/conf.d/001-redis-input.conf
+# ADD ./logstash/002-tcp-json-input.conf /etc/logstash/conf.d/002-tcp-json-input.conf
+# ADD ./logstash/999-elasticsearch-output.conf /etc/logstash/conf.d/999-elasticsearch-output.conf
 
 # Confiure StatsD
 ADD ./statsd/config.js /src/statsd/config.js
@@ -101,10 +101,10 @@ RUN mkdir -p /logs/supervisor && touch /logs/supervisor/supervisord.log &&\
 EXPOSE 80
 
 # Kibana
-EXPOSE 81
+# EXPOSE 81
 
 # Logstash TCP
-EXPOSE 4560
+# EXPOSE 4560
 
 # Graphite (Carbon)
 EXPOSE 2003
@@ -113,16 +113,17 @@ EXPOSE 2003
 EXPOSE 8000
 
 # Redis
-EXPOSE 6379
+# EXPOSE 6379
 
 # Elasticserach
-EXPOSE 9200
+# EXPOSE 9200
 
 # StatsD
 EXPOSE 8125/udp
 EXPOSE 8126
 
-VOLUME ["/data/graphite","/data/elasticsearch",]
+# VOLUME ["/data/graphite","/data/elasticsearch",]
+VOLUME [ "/data/graphite" ]
 VOLUME ["/logs/elasticsearch","/logs/supervisor","/logs/nginx"]
 
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
