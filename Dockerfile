@@ -9,7 +9,11 @@ FROM debian:wheezy
 MAINTAINER Pablo Alcantar <palcantar@lemontech.cl>
 
 RUN echo 'deb http://http.debian.net/debian wheezy-backports main' >> /etc/apt/sources.list.d/wheezy-backports.list
-# RUN echo 'deb http://us.archive.ubuntu.com/ubuntu/ trusty universe' >> /etc/apt/sources.list
+
+RUN apt-get -y update
+RUN apt-get -y install ca-certificates wget
+RUN wget -qO - https://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -
+
 # Logstash
 RUN echo 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main' >> /etc/apt/sources.list.d/logstash.list
 RUN apt-get -y update &&\
